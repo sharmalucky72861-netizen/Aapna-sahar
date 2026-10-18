@@ -1,1 +1,370 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apna Saher</title>
 
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f6f4;
+  color: #222;
+}
+
+header {
+  background: #087f5b;
+  color: white;
+  padding: 25px 16px;
+  border-radius: 0 0 22px 22px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+header p {
+  margin-bottom: 0;
+}
+
+.search {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 9px;
+  font-size: 15px;
+}
+
+.search input {
+  flex: 1;
+}
+
+button {
+  background: #087f5b;
+  color: white;
+  border: none;
+  padding: 11px 15px;
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+.search button {
+  background: #ffc857;
+  color: #222;
+}
+
+main {
+  padding: 16px;
+  max-width: 700px;
+  margin: auto;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.category {
+  background: white;
+  border-radius: 13px;
+  padding: 15px 5px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px #0001;
+}
+
+.category div {
+  font-size: 27px;
+  margin-bottom: 7px;
+}
+
+.card {
+  background: white;
+  padding: 14px;
+  border-radius: 12px;
+  margin: 10px 0;
+  box-shadow: 0 2px 6px #0001;
+}
+
+.card h3 {
+  margin: 0 0 8px;
+}
+
+.card p {
+  color: #555;
+  font-size: 14px;
+}
+
+form {
+  display: grid;
+  gap: 10px;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+nav {
+  display: flex;
+  justify-content: space-around;
+  background: white;
+  padding: 12px 3px;
+  position: sticky;
+  bottom: 0;
+  border-top: 1px solid #ddd;
+}
+
+nav button {
+  padding: 10px 8px;
+  font-size: 12px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+  font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🏙️ Apna Saher</h1>
+  <p>आपके शहर की हर जरूरी जानकारी</p>
+
+  <div class="search">
+    <input id="search" placeholder="दुकान या सर्विस खोजें">
+    <button onclick="searchItems()">खोजें</button>
+  </div>
+</header>
+
+<main>
+
+<section id="home" class="page active">
+
+  <h2>आप क्या ढूँढ रहे हैं?</h2>
+
+  <div class="categories">
+    <div class="category" onclick="filterItems('दुकान')">
+      <div>🏪</div>दुकानें
+    </div>
+
+    <div class="category" onclick="filterItems('सर्विस')">
+      <div>🛠️</div>सर्विस
+    </div>
+
+    <div class="category" onclick="showPage('news')">
+      <div>📰</div>न्यूज़
+    </div>
+
+    <div class="category" onclick="showPage('jobs')">
+      <div>💼</div>नौकरियाँ
+    </div>
+
+    <div class="category" onclick="showPage('add')">
+      <div>➕</div>दुकान जोड़ें
+    </div>
+
+    <div class="category" onclick="showPage('about')">
+      <div>ℹ️</div>हमारे बारे में
+    </div>
+  </div>
+
+  <h2>लोकप्रिय दुकानें और सर्विस</h2>
+  <div id="businesses"></div>
+
+</section>
+
+<section id="add" class="page">
+  <h2>अपनी दुकान जोड़ें</h2>
+
+  <form id="businessForm">
+    <input id="name" placeholder="दुकान का नाम" required>
+
+    <select id="type">
+      <option value="दुकान">दुकान</option>
+      <option value="सर्विस">सर्विस</option>
+    </select>
+
+    <input id="phone" placeholder="मोबाइल नंबर">
+
+    <input id="address" placeholder="दुकान का पता">
+
+    <textarea id="description"
+      placeholder="आपकी दुकान पर क्या मिलता है?"></textarea>
+
+    <button type="submit">दुकान सेव करें</button>
+  </form>
+
+  <p>नोट: जानकारी अभी केवल इसी ब्राउज़र में सेव होगी।</p>
+</section>
+
+<section id="news" class="page">
+  <h2>📰 लोकल न्यूज़</h2>
+  <div class="card">
+    <p>यहाँ शहर की खबरें दिखाई जा सकती हैं।</p>
+    <p>लाइव खबरों के लिए आगे न्यूज़ स्रोत जोड़ना होगा।</p>
+  </div>
+</section>
+
+<section id="jobs" class="page">
+  <h2>💼 स्थानीय नौकरियाँ</h2>
+  <div class="card">
+    <p>यहाँ स्थानीय नौकरियों की जानकारी जोड़ी जा सकती है।</p>
+  </div>
+</section>
+
+<section id="about" class="page">
+  <h2>Apna Saher के बारे में</h2>
+  <div class="card">
+    <p>Apna Saher का उद्देश्य लोगों को अपने शहर की
+    दुकानें और स्थानीय सेवाएँ खोजने में मदद करना है।</p>
+  </div>
+</section>
+
+</main>
+
+<nav>
+  <button onclick="showPage('home')">🏠 होम</button>
+  <button onclick="showPage('news')">📰 न्यूज़</button>
+  <button onclick="showPage('jobs')">💼 नौकरी</button>
+  <button onclick="showPage('add')">➕ दुकान जोड़ें</button>
+</nav>
+
+<footer>
+  Apna Saher © 2026
+</footer>
+
+<script>
+let data = [];
+
+try {
+  data = JSON.parse(
+    localStorage.getItem("apnaSaher") || "[]"
+  );
+} catch(e) {
+  data = [];
+}
+
+function saveData() {
+  localStorage.setItem(
+    "apnaSaher",
+    JSON.stringify(data)
+  );
+}
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p => {
+    p.classList.remove("active");
+  });
+
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+function render(items = data) {
+  const box = document.getElementById("businesses");
+  box.innerHTML = "";
+
+  if (!items.length) {
+    box.innerHTML =
+      '<div class="card">अभी कोई दुकान नहीं जोड़ी गई है।</div>';
+    return;
+  }
+
+  items.forEach(b => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const title = document.createElement("h3");
+    title.textContent = "🏪 " + b.name;
+    card.appendChild(title);
+
+    const desc = document.createElement("p");
+    desc.textContent = b.description || b.type;
+    card.appendChild(desc);
+
+    const address = document.createElement("p");
+    address.textContent = "📍 " + (b.address || "पता उपलब्ध नहीं");
+    card.appendChild(address);
+
+    if (b.phone) {
+      const link = document.createElement("a");
+      link.href = "tel:" + b.phone;
+      link.textContent = "📞 कॉल करें";
+      card.appendChild(link);
+    }
+
+    box.appendChild(card);
+  });
+}
+
+function searchItems() {
+  const q = document.getElementById("search")
+    .value.toLowerCase().trim();
+
+  showPage("home");
+
+  render(data.filter(b =>
+    [b.name, b.type, b.address, b.description]
+      .join(" ")
+      .toLowerCase()
+      .includes(q)
+  ));
+}
+
+function filterItems(type) {
+  showPage("home");
+  render(data.filter(b => b.type === type));
+}
+
+document.getElementById("businessForm")
+.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const item = {
+    name: document.getElementById("name").value.trim(),
+    type: document.getElementById("type").value,
+    phone: document.getElementById("phone").value.trim(),
+    address: document.getElementById("address").value.trim(),
+    description: document.getElementById("description").value.trim()
+  };
+
+  data.push(item);
+  saveData();
+  render();
+
+  this.reset();
+  showPage("home");
+
+  alert("दुकान इस डिवाइस में सेव हो गई!");
+});
+
+render();
+</script>
+
+</body>
+</html>
